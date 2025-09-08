@@ -1,5 +1,5 @@
 import './App.css';
-import {auth} from './firebase/init';
+import { auth } from './firebase/init';
 
 function App() {
   return (
