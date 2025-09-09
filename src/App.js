@@ -1,13 +1,25 @@
 import './App.css';
 import { auth } from './firebase/init';
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { 
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
+ } from "firebase/auth";
 
 
 function App() {
   function register() {
-    console.log("register");
     createUserWithEmailAndPassword(auth, "email@email.com", "test123")
     .then((user) => {
+      console.log(user)
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
+
+  function login() {
+    signInWithEmailAndPassword(auth, "email@email.com", "test123")
+       .then((user) => {
       console.log(user)
     })
     .catch((error) => {
@@ -17,6 +29,7 @@ function App() {
   return (
     <div className='App'>
       <button onClick={register}>Register</button>
+      <button onClick={login}>Login</button>
     </div>
   );
 }
