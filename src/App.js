@@ -21,11 +21,12 @@ function App() {
 
   function login() {
     signInWithEmailAndPassword(auth, "email@email.com", "test123")
-       .then((user) => {
+       .then(({ user }) => {
       setUser(user);
     })
     .catch((error) => {
-      console.log(error);
+      setErrorMessage('The password is invalid or the user does not have an account.')
+      console.log(error.message);
     })
   }
 
@@ -38,6 +39,7 @@ function App() {
       <button onClick={register}>Register</button>
       <button onClick={login}>Login</button>
       <button onClick={logout}>Logout</button>
+      {user.email}
     </div>
   );
 }
