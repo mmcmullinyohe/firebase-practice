@@ -25,13 +25,13 @@ function App() {
       setUser(user);
     })
     .catch((error) => {
-      setErrorMessage('The password is invalid or the user does not have an account.')
       console.log(error.message);
     })
   }
 
   function logout() {
     signOut(auth);
+    setUser({});
   }
 
   return (
