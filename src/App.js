@@ -1,32 +1,44 @@
-import React from 'react';
-import './App.css';
-import { auth } from './firebase/init';
-import { 
+import React from "react";
+import "./App.css";
+import { auth } from "./firebase/init";
+import {
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword, 
-  signOut
- } from "firebase/auth";
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+} from "firebase/auth";
 
 function App() {
   const [user, setUser] = React.useState({});
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      setLoading(false);
+      console.log(user);
+      if (user) {
+        setUser(user);
+      }
+    });
+  }, []);
   function register() {
     createUserWithEmailAndPassword(auth, "email@email.com", "test123")
-    .then((user) => {
-      console.log(user)
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+      .then((user) => {
+        console.log(user);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   function login() {
     signInWithEmailAndPassword(auth, "email@email.com", "test123")
-       .then(({ user }) => {
-      setUser(user);
-    })
-    .catch((error) => {
-      console.log(error.message);
-    })
+      .then(({ user }) => {
+        setUser(user);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   }
 
   function logout() {
@@ -35,11 +47,11 @@ function App() {
   }
 
   return (
-    <div className='App'>
+    <div className="App">
       <button onClick={register}>Register</button>
       <button onClick={login}>Login</button>
       <button onClick={logout}>Logout</button>
-      {user.email}
+      {loading ? "loading..." : user.email}
     </div>
   );
 }
