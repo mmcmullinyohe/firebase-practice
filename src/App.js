@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import { auth, db } from "./firebase/init";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, getDoc, doc } from "firebase/firestore";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -23,7 +23,16 @@ function App() {
 
   async function getAllPosts() {
     const { docs } = await getDocs(collection(db, "posts"));
-    const posts = docs.map(elem => elem.data())
+    const posts = docs.map(elem => ({ ...elem.data(), id: elem.id}));
+    console.log(posts);
+  }
+
+  async function getPostByID() {
+    const hardcodedID = "dMPFzJwYGjRdo0c0EA9A";
+    const postRef = doc(db, "posts", hardcodedID);
+    const postSnap = await getDoc(postRef);
+    const post = postSnap.data()
+    console.log(post)
   }
 
   React.useEffect(() => {
@@ -68,6 +77,7 @@ function App() {
       {loading ? "loading..." : user.email}
       <button onClick={createPost}>Create Post</button>
       <button onClick={getAllPosts}>Get All Posts</button>
+      <button onClick={getPostByID}>Get Post By ID</button>
     </div>
   );
 }
