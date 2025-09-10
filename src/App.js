@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import { auth, db } from "./firebase/init";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -19,6 +19,11 @@ function App() {
       description: "Finish Frontend Simplified",
     };
     addDoc(collection(db, "posts"), post)
+  }
+
+  async function getAllPosts() {
+    const { docs } = await getDocs(collection(db, "posts"));
+    const posts = docs.map(elem => elem.data())
   }
 
   React.useEffect(() => {
@@ -62,6 +67,7 @@ function App() {
       <button onClick={logout}>Logout</button>
       {loading ? "loading..." : user.email}
       <button onClick={createPost}>Create Post</button>
+      <button onClick={getAllPosts}>Get All Posts</button>
     </div>
   );
 }
