@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import { auth, db } from "./firebase/init";
-import { collection, addDoc, getDocs, getDoc, doc, query, where } from "firebase/firestore";
+import { collection, addDoc, getDocs, getDoc, doc, query, where, updateDoc } from "firebase/firestore";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -12,6 +12,18 @@ import {
 function App() {
   const [user, setUser] = React.useState({});
   const [loading, setLoading] = React.useState(true);
+
+  async function updatePost() {
+    const hardcodedID = "dMPFzJwYGjRdo0c0EA9A";
+    const postRef = doc(db, "posts", hardcodedID);
+    const post = await getPostByID(hardcodedID)
+    const newPost = {
+      ...post,
+      title: "Land a $400k job"
+    };
+    console.log(newPost)
+     updateDoc(postRef, newPost)
+  }
 
   function createPost() {
     const post = {
@@ -28,12 +40,10 @@ function App() {
     console.log(posts);
   }
 
-  async function getPostByID() {
-    const hardcodedID = "dMPFzJwYGjRdo0c0EA9A";
-    const postRef = doc(db, "posts", hardcodedID);
+  async function getPostByID(id) {
+    const postRef = doc(db, "posts", id);
     const postSnap = await getDoc(postRef);
-    const post = postSnap.data()
-    console.log(post)
+    return postSnap.data()
   }
 
   async function getPostByUid() {
@@ -89,6 +99,7 @@ function App() {
       <button onClick={getAllPosts}>Get All Posts</button>
       <button onClick={getPostByID}>Get Post By ID</button>
       <button onClick={getPostByUid}>Get Post By UID</button>
+      <button onClick={updatePost}>Update Post</button>
     </div>
   );
 }
